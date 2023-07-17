@@ -1,0 +1,66 @@
+{
+    "data": {
+        "slug": "whistler-blackcomb",
+        "name": "Whistler Blackcomb",
+        "country": "CA",
+        "region": "BC",
+        "href": "http://www.whistlerblackcomb.com/the-mountain/lifts-and-grooming/index.aspx",
+        "units": "metric",
+        "location": {
+            "latitude": 50.10693,
+            "longitude": -122.922073
+        },
+        "lifts": {
+            "status": {
+                "7th Heaven Express": "closed",
+                "Blackcomb Gondola Lower": "closed",
+                "Blackcomb Gondola Upper": "closed",
+                "Bubly Tube Park": "closed",
+                "Catskinner Express": "closed",
+                "Crystal Ridge Express": "closed",
+                "Excalibur Gondola Lower": "closed",
+                "Excalibur Gondola Upper": "closed",
+                "Excelerator Express": "closed",
+                "Glacier Express": "closed",
+                "Horstman T-Bar": "closed",
+                "Jersey Cream Express": "closed",
+                "Magic Chair": "closed",
+                "Peak 2 Peak Gondola": "closed",
+                "Showcase T-Bar": "closed",
+                "Big Red Express": "closed",
+                "Creekside Gondola": "closed",
+                "Emerald 6 Express": "closed",
+                "Fitzsimmons Express": "closed",
+                "Franz's Chair": "closed",
+                "Garbanzo Express": "closed",
+                "Harmony 6 Express": "closed",
+                "Olympic Chair": "closed",
+                "Peak Express": "closed",
+                "Symphony Express": "closed",
+                "T-Bars": "closed",
+                "Whistler Village Gondola Lower": "closed",
+                "Whistler Village Gondola Upper": "closed"
+            },
+            "stats": {
+                "open": 0,
+                "hold": 0,
+                "scheduled": 0,
+                "closed": 28,
+                "percentage": {
+                    "open": 0,
+                    "hold": 0,
+                    "scheduled": 0,
+                    "closed": 100
+                }
+            }
+        },
+        "conditions": {
+            "base": 121,
+            "season": 943,
+            "twelve_hours": 0,
+            "twentyfour_hours": 0,
+            "fortyeight_hours": 0,
+            "seven_days": 0
+        }
+    }
+}
