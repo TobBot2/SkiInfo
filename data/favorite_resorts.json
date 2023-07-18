@@ -1,0 +1,246 @@
+{
+    "data": [
+        {
+            "slug": "alta",
+            "name": "Alta",
+            "country": "US",
+            "region": "UT",
+            "location": {
+                "latitude": 40.583828,
+                "longitude": -111.63726
+            },
+            "url": "https://api.skiapi.com/v1/resort/alta"
+        },
+        {
+            "slug": "aspen-highlands",
+            "name": "Aspen Highlands",
+            "country": "US",
+            "region": "CO",
+            "location": {
+                "latitude": 39.182522,
+                "longitude": -106.855904
+            },
+            "url": "https://api.skiapi.com/v1/resort/aspen-highlands"
+        },
+        {
+            "slug": "aspen-mountain",
+            "name": "Aspen Mountain",
+            "country": "US",
+            "region": "CO",
+            "location": {
+                "latitude": 39.186714,
+                "longitude": -106.819275
+            },
+            "url": "https://api.skiapi.com/v1/resort/aspen-mountain"
+        },
+        {
+            "slug": "beavercreek",
+            "name": "Beaver Creek",
+            "country": "US",
+            "region": "CO",
+            "location": {
+                "latitude": 39.600464,
+                "longitude": -106.517899
+            },
+            "url": "https://api.skiapi.com/v1/resort/beavercreek"
+        },
+        {
+            "slug": "breck",
+            "name": "Breckenridge",
+            "country": "US",
+            "region": "CO",
+            "location": {
+                "latitude": 39.480724,
+                "longitude": -106.066238
+            },
+            "url": "https://api.skiapi.com/v1/resort/breck"
+        },
+        {
+            "slug": "camelback",
+            "name": "Camelback Mountain",
+            "country": "US",
+            "region": "PA",
+            "location": {
+                "latitude": 41.051389,
+                "longitude": -75.355
+            },
+            "url": "https://api.skiapi.com/v1/resort/camelback"
+        },
+        {
+            "slug": "hunter",
+            "name": "Hunter Mountain",
+            "country": "US",
+            "region": "NY",
+            "location": {
+                "latitude": 42.205029,
+                "longitude": -74.20874
+            },
+            "url": "https://api.skiapi.com/v1/resort/hunter"
+        },
+        {
+            "slug": "jackson-hole",
+            "name": "Jackson Hole",
+            "country": "US",
+            "region": "WY",
+            "location": {
+                "latitude": 43.588318,
+                "longitude": -110.827438
+            },
+            "url": "https://api.skiapi.com/v1/resort/jackson-hole"
+        },
+        {
+            "slug": "jay-peak",
+            "name": "Jay Peak",
+            "country": "US",
+            "region": "VT",
+            "location": {
+                "latitude": 44.928837,
+                "longitude": -72.501701
+            },
+            "url": "https://api.skiapi.com/v1/resort/jay-peak"
+        },
+        {
+            "slug": "killington",
+            "name": "Killington",
+            "country": "US",
+            "region": "VT",
+            "location": {
+                "latitude": 43.619675,
+                "longitude": -72.802879
+            },
+            "url": "https://api.skiapi.com/v1/resort/killington"
+        },
+        {
+            "slug": "okemo",
+            "name": "Okemo",
+            "country": "US",
+            "region": "VT",
+            "location": {
+                "latitude": 43.401806,
+                "longitude": -72.716705
+            },
+            "url": "https://api.skiapi.com/v1/resort/okemo"
+        },
+        {
+            "slug": "parkcity",
+            "name": "Park City",
+            "country": "US",
+            "region": "UT",
+            "location": {
+                "latitude": 40.651375,
+                "longitude": -111.508118
+            },
+            "url": "https://api.skiapi.com/v1/resort/parkcity"
+        },
+        {
+            "slug": "snowbird",
+            "name": "Snowbird",
+            "country": "US",
+            "region": "UT",
+            "location": {
+                "latitude": 40.581074,
+                "longitude": -111.657082
+            },
+            "url": "https://api.skiapi.com/v1/resort/snowbird"
+        },
+        {
+            "slug": "solitude",
+            "name": "Solitude",
+            "country": "US",
+            "region": "UT",
+            "location": {
+                "latitude": 40.625648,
+                "longitude": -111.600708
+            },
+            "url": "https://api.skiapi.com/v1/resort/solitude"
+        },
+        {
+            "slug": "steamboat",
+            "name": "Steamboat",
+            "country": "US",
+            "region": "CO",
+            "location": {
+                "latitude": 40.458214,
+                "longitude": -106.805733
+            },
+            "url": "https://api.skiapi.com/v1/resort/steamboat"
+        },
+        {
+            "slug": "stowe",
+            "name": "Stowe",
+            "country": "US",
+            "region": "VT",
+            "location": {
+                "latitude": 44.530502,
+                "longitude": -72.786873
+            },
+            "url": "https://api.skiapi.com/v1/resort/stowe"
+        },
+        {
+            "slug": "stratton",
+            "name": "Stratton",
+            "country": "US",
+            "region": "VT",
+            "location": {
+                "latitude": 43.114017,
+                "longitude": -72.906303
+            },
+            "url": "https://api.skiapi.com/v1/resort/stratton"
+        },
+        {
+            "slug": "telluride",
+            "name": "Telluride",
+            "country": "US",
+            "region": "CO",
+            "location": {
+                "latitude": 37.932961,
+                "longitude": -107.850723
+            },
+            "url": "https://api.skiapi.com/v1/resort/telluride"
+        },
+        {
+            "slug": "tremblant",
+            "name": "Mont Tremblant",
+            "country": "CA",
+            "region": "QB",
+            "location": {
+                "latitude": 46.213696,
+                "longitude": -74.584641
+            },
+            "url": "https://api.skiapi.com/v1/resort/tremblant"
+        },
+        {
+            "slug": "vail",
+            "name": "Vail",
+            "country": "US",
+            "region": "CO",
+            "location": {
+                "latitude": 39.605026,
+                "longitude": -106.356155
+            },
+            "url": "https://api.skiapi.com/v1/resort/vail"
+        },
+        {
+            "slug": "whistler-blackcomb",
+            "name": "Whistler Blackcomb",
+            "country": "CA",
+            "region": "BC",
+            "location": {
+                "latitude": 50.10693,
+                "longitude": -122.922073
+            },
+            "url": "https: //api.skiapi.com/v1/resort/whistler-blackcomb"
+        },
+        {
+            "slug": "whiteface",
+            "name": "Whiteface",
+            "country": "US",
+            "region": "NY",
+            "location": {
+                "latitude": 44.356506,
+                "longitude": -73.870613
+            },
+            "url": "https://api.skiapi.com/v1/resort/whiteface"
+        }
+    ]
+}
