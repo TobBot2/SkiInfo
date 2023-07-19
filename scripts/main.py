@@ -1,7 +1,7 @@
 # import PySimpleGUI as sg
 from PyQt6.QtWidgets import (QWidget, QSlider, QLineEdit, QLabel, QPushButton, QScrollArea, QApplication,
                              QHBoxLayout, QVBoxLayout, QMainWindow)
-from PyQt6.QtGui import QIcon, QFont, QFontDatabase
+from PyQt6.QtGui import QIcon, QFont, QFontDatabase, QWheelEvent
 from PyQt6.QtCore import Qt
 import sys
 import json
@@ -10,21 +10,21 @@ import ski
 
 SCREEN_SIZE = (800, 480)
 
-def generate_layout(resorts: list[str]):
-    return [
-        [sg.Text('Pick A Mountain Resort', justification='center')],
-        [sg.Listbox([resorts[i]['name'] for i in range(len(resorts)) ],
-                   select_mode='LISTBOX_SELECT_MODE_SINGLE', font=('Arial', 30), size=(20,5)),
-         sg.Button("OK", size=(20,10))]
-    ]
-
 class ResortsMenuWindow(QMainWindow):
     def __init__(self, resorts: list[str]):
         super().__init__()
 
+        self.title_size = { 'x':int(SCREEN_SIZE[0]*0.75), 'y':80}
+        self.resort_label_height = 75
+
+        self.resorts = resorts
+        self.selected_resort = None
+        self.select_key = "-> "
+        self.unselected_prefix = "    "
+
         self.create_gui(resorts)
 
-    def create_gui(self, resorts: list[str]):
+    def create_gui(self, resorts: list[str]) -> None:
         if sys.platform == 'win32':
             self.resize(SCREEN_SIZE[0], SCREEN_SIZE[1])
             self.setWindowTitle('Ski Info')
@@ -33,52 +33,80 @@ class ResortsMenuWindow(QMainWindow):
 
         font_id = QFontDatabase.addApplicationFont('data/Snowman.ttf')
         if (font_id < 0): print('ERROR :: Unable to load font')
-        font = QFontDatabase.applicationFontFamilies(font_id)[0]
+        self.font = QFontDatabase.applicationFontFamilies(font_id)[0]
 
         # BEGIN LAYOUT STUFF
 
-        title_size = { 'x':int(SCREEN_SIZE[0]*0.75), 'y':80}
-        title = QLabel("Ski Resorts Menu")
-        title.setFont(QFont(font, title_size['y']))
-        # title.setGeometry(int(SCREEN_SIZE[0]/2-title_size['x']/2), 10, title_size['x'], title_size['y'])
+        self.title = QLabel("\uf012ki Resorts Men\uf02e")
+        self.title.setFont(QFont(self.font, self.title_size['y']))
 
-        vbox = QVBoxLayout()
+        self.vbox = QVBoxLayout()
+        self.vbox.addWidget(self.create_resort_label(''))
+        self.vbox.addWidget(self.create_resort_label(''))
+        self.resort_labels = []
         for i in range(len(resorts)):
-            label = QLabel(resorts[i]['name'])
-            label.setFixedSize(SCREEN_SIZE[0]-40, 100)
-            label.setFont(QFont(font, 30))
-            label.setAlignment(Qt.AlignmentFlag.AlignLeft)
-            vbox.addWidget(label)
+            resort = self.create_resort_label(self.unselected_prefix + resorts[i]['name'])
+            self.resort_labels.append(resort)
+            self.vbox.addWidget(resort)
+        self.vbox.addWidget(self.create_resort_label(''))
+        self.vbox.addWidget(self.create_resort_label(''))
 
         vbox_widget = QWidget()
-        vbox_widget.setLayout(vbox)
+        vbox_widget.setLayout(self.vbox)
 
-        scroll_resorts = QScrollArea()
-        scroll_resorts.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        scroll_resorts.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        scroll_resorts.setWidget(vbox_widget)
+        self.scroll_resorts = QScrollArea()
+        self.scroll_resorts.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.scroll_resorts.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scroll_resorts.setWidget(vbox_widget)
+        self.scroll_resorts.verticalScrollBar().valueChanged.connect(self.on_scroll_update_resort)
 
         title_separator = QVBoxLayout()
-        title_separator.addWidget(title)
-        title_separator.addWidget(scroll_resorts)
+        title_separator.addWidget(self.title)
+        title_separator.addWidget(self.scroll_resorts)
 
         container = QWidget()
         container.setLayout(title_separator)
 
         self.setCentralWidget(container)
+    
+    def create_resort_label(self, name: str) -> QLabel:
+        label = QLabel(name)
+        label.setFixedSize(SCREEN_SIZE[0]-40, self.resort_label_height)
+        label.setFont(QFont(self.font, int(self.resort_label_height * .4)))
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        return label
+    
+    def on_scroll_update_resort(self, scroll_amount):
+        new_selected = self.map_scroll_to_resort(scroll_amount)
         
+        if new_selected is not self.selected_resort:
+            new_selected.setText(self.select_key + new_selected.text()[len(self.unselected_prefix):])
+            if self.selected_resort is not None:
+                self.selected_resort.setText(self.unselected_prefix + self.selected_resort.text()[len(self.select_key):])
+            self.selected_resort = new_selected
+
+
+    def map_scroll_to_resort(self, amount: int) -> QLabel:
+        scroll_range = (self.resort_label_height/4, len(self.resort_labels) * self.resort_label_height)
+        resort_label_indeces_range = (0, len(self.resort_labels) - 1)
+
+        # map
+        slope = (resort_label_indeces_range[1] - resort_label_indeces_range[0]) / (scroll_range[1] - scroll_range[0])
+        resort_index = int(resort_label_indeces_range[0] + slope * (amount - scroll_range[0]))
+
+        # clamp
+        resort_index = 0 if resort_index < 0 else resort_index
+        resort_index = len(self.resort_labels)-1 if resort_index > len(self.resort_labels)-1 else resort_index
+
+        return self.resort_labels[resort_index]
 
 if __name__ == '__main__':
     with open('data/favorite_resorts.json') as f:
         resorts = json.load(f)['data']
-    # window = sg.Window('Ski Info', layout=generate_layout(resorts), no_titlebar=True, size=SCREEN_SIZE)
-    # while True:
-    #     event, values = window.read()
-    #     if event in ('OK', 'Quit', sg.WIN_CLOSED):
-    #         break
-    # window.close(); del window
     
     app = QApplication(sys.argv)
     window = ResortsMenuWindow(resorts=resorts)
     window.show()
+
+
     sys.exit(app.exec())
