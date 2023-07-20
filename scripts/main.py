@@ -1,5 +1,6 @@
+import typing
 from PyQt6.QtWidgets import (QWidget, QLabel, QScrollArea, QApplication,
-                             QHBoxLayout, QVBoxLayout, QMainWindow)
+                             QHBoxLayout, QVBoxLayout, QMainWindow, QStackedWidget)
 from PyQt6.QtGui import QFont, QFontDatabase, QImage, QPixmap
 from PyQt6.QtCore import Qt
 import sys
@@ -29,6 +30,8 @@ class ResortsMenuWindow(QMainWindow):
         self.unselected_prefix = "    "
 
         self.create_gui(resorts)
+
+        self.on_scroll_update_resort(0)
 
     def create_gui(self, resorts: list[str]) -> None:
         if sys.platform == 'win32':
@@ -104,6 +107,9 @@ class ResortsMenuWindow(QMainWindow):
 
         return self.resort_labels[resort_index]
     
+    def get_selected_resort(self) -> str:
+        return self.selected_resort.text()[len(self.unselected_prefix):]
+    
 class ResortInfoWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -153,15 +159,31 @@ class ResortInfoWindow(QMainWindow):
         info_panel.addWidget(self.temperature_peak_min)
         info_panel.addWidget(self.temperature_peak_max)
 
-        self.trails_chart = QLabel("Trails")
+        self.trails_label = QLabel("% Trails")
+        self.trails_label.setFont(QFont(self.snowman_font, 20))
+        self.trails_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.trails_chart = QLabel()
         self.trails_chart.setObjectName("chart")
-        self.trails_chart.setPixmap(QPixmap('data/image.png').scaled(200, 200))
-        self.chairs_chart = QLabel("Lifts")
+        self.trails_chart.setPixmap(QPixmap('data/image.png'))
+        self.trails_chart.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        trails = QVBoxLayout()
+        trails.addWidget(self.trails_label)
+        trails.addWidget(self.trails_chart)
+
+        self.chairs_label = QLabel("% Lifts")
+        self.chairs_label.setFont(QFont(self.snowman_font, 20))
+        self.chairs_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.chairs_chart = QLabel()
         self.chairs_chart.setObjectName("chart")
-        self.chairs_chart.setPixmap(QPixmap('data/image.png').scaled(200, 200))
+        self.chairs_chart.setPixmap(QPixmap('data/image.png'))
+        self.chairs_chart.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        chairs = QVBoxLayout()
+        chairs.addWidget(self.chairs_label)
+        chairs.addWidget(self.chairs_chart)
+
         charts_hbox = QHBoxLayout()
-        charts_hbox.addWidget(self.trails_chart)
-        charts_hbox.addWidget(self.chairs_chart)
+        charts_hbox.addLayout(trails)
+        charts_hbox.addLayout(chairs)
 
         self.resort_map = QLabel()
         self.resort_map.setObjectName("map")
@@ -183,15 +205,39 @@ class ResortInfoWindow(QMainWindow):
         all_widget = QWidget()
         all_widget.setLayout(all_layout)
         self.setCentralWidget(all_widget)
+
+    def update_info(self, resort):
+        pass
         
+class Screen(QStackedWidget):
+    def __init__(self) -> None:
+        super().__init__()
+
+        self.resorts_menu = ResortsMenuWindow(resorts=resorts)
+        self.resort_info = ResortInfoWindow()
+        self.addWidget(self.resorts_menu)
+        self.addWidget(self.resort_info)
+
+        self.setCurrentWidget(self.resorts_menu)
+
+    def keyPressEvent(self, event):
+        super(Screen, self).keyPressEvent(event)
+
+        if self.currentWidget() is self.resorts_menu:
+            resort = self.resorts_menu.get_selected_resort()
+            self.setCurrentWidget(self.resort_info)
+            self.resort_info.update_info(resort)
+        else:
+            self.setCurrentWidget(self.resorts_menu)
+
+
 if __name__ == '__main__':
     with open('data/favorite_resorts.json') as f:
         resorts = json.load(f)['data']
     
     app = QApplication(sys.argv)
-    # window = ResortsMenuWindow(resorts=resorts)
-    window = ResortInfoWindow()
-    window.show()
 
+    screen = Screen()
+    screen.show()
 
     sys.exit(app.exec())

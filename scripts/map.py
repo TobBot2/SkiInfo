@@ -45,7 +45,7 @@ if __name__ == '__main__':
     lat = 50.10693
     lon = -122.922073
 
-    map_img = request_map_image(lat, lon, 340, 175)
+    map_img = request_map_image(lat, lon, 340, 150)
     with open('data/map.png', 'wb') as f:
         f.write(map_img)
 

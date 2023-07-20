@@ -1,3 +1,5 @@
+/* technically a .qss file not a .css file, but I need the intellisense */
+
 * {
     background-color:#66a1ff;
     color: #2e2e3b;
@@ -19,20 +21,11 @@ QScrollArea QWidget {
     background-color: #f0eff4;
 }
 
-
 QLabel#title {
     background-color: #f0eff4;
     border-radius: 15px;
 }
 
 QLabel#map {
-    padding: 10px;
-    background-color: #f0eff4;
-
-    border-radius: 30px;
-    border: 1px solid;
-}
-
-QLabel#chart {
-    border: 1px solid;
+    padding: 0px;
 }
