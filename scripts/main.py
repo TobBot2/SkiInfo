@@ -1,7 +1,6 @@
-# import PySimpleGUI as sg
-from PyQt6.QtWidgets import (QWidget, QSlider, QLineEdit, QLabel, QPushButton, QScrollArea, QApplication,
+from PyQt6.QtWidgets import (QWidget, QLabel, QScrollArea, QApplication,
                              QHBoxLayout, QVBoxLayout, QMainWindow)
-from PyQt6.QtGui import QIcon, QFont, QFontDatabase, QWheelEvent
+from PyQt6.QtGui import QFont, QFontDatabase, QImage, QPixmap
 from PyQt6.QtCore import Qt
 import sys
 import json
@@ -10,9 +9,16 @@ import ski
 
 SCREEN_SIZE = (800, 480)
 
+with open('data/styles.css', 'r') as f:
+    QSS_STYLE = f.read()
+
 class ResortsMenuWindow(QMainWindow):
     def __init__(self, resorts: list[str]):
         super().__init__()
+
+        font_id = QFontDatabase.addApplicationFont('data/Snowman.ttf')
+        if (font_id < 0): print('ERROR :: Unable to load font')
+        self.snowman_font = QFontDatabase.applicationFontFamilies(font_id)[0]
 
         self.title_size = { 'x':int(SCREEN_SIZE[0]*0.75), 'y':80}
         self.resort_label_height = 75
@@ -26,19 +32,18 @@ class ResortsMenuWindow(QMainWindow):
 
     def create_gui(self, resorts: list[str]) -> None:
         if sys.platform == 'win32':
-            self.resize(SCREEN_SIZE[0], SCREEN_SIZE[1])
+            # self.resize(SCREEN_SIZE[0], SCREEN_SIZE[1])
             self.setWindowTitle('Ski Info')
+            self.setFixedSize(SCREEN_SIZE[0], SCREEN_SIZE[1])
+            self.setStyleSheet(QSS_STYLE)
         elif sys.platform == 'linux':
             self.showFullScreen()
-
-        font_id = QFontDatabase.addApplicationFont('data/Snowman.ttf')
-        if (font_id < 0): print('ERROR :: Unable to load font')
-        self.font = QFontDatabase.applicationFontFamilies(font_id)[0]
 
         # BEGIN LAYOUT STUFF
 
         self.title = QLabel("\uf012ki Resorts Men\uf02e")
-        self.title.setFont(QFont(self.font, self.title_size['y']))
+        self.title.setObjectName("title")
+        self.title.setFont(QFont(self.snowman_font, self.title_size['y']))
 
         self.vbox = QVBoxLayout()
         self.vbox.addWidget(self.create_resort_label(''))
@@ -55,7 +60,7 @@ class ResortsMenuWindow(QMainWindow):
         vbox_widget.setLayout(self.vbox)
 
         self.scroll_resorts = QScrollArea()
-        self.scroll_resorts.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.scroll_resorts.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_resorts.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.scroll_resorts.setWidget(vbox_widget)
         self.scroll_resorts.verticalScrollBar().valueChanged.connect(self.on_scroll_update_resort)
@@ -72,7 +77,7 @@ class ResortsMenuWindow(QMainWindow):
     def create_resort_label(self, name: str) -> QLabel:
         label = QLabel(name)
         label.setFixedSize(SCREEN_SIZE[0]-40, self.resort_label_height)
-        label.setFont(QFont(self.font, int(self.resort_label_height * .4)))
+        label.setFont(QFont(self.snowman_font, int(self.resort_label_height * .4)))
         label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         return label
     
@@ -84,7 +89,6 @@ class ResortsMenuWindow(QMainWindow):
             if self.selected_resort is not None:
                 self.selected_resort.setText(self.unselected_prefix + self.selected_resort.text()[len(self.select_key):])
             self.selected_resort = new_selected
-
 
     def map_scroll_to_resort(self, amount: int) -> QLabel:
         scroll_range = (self.resort_label_height/4, len(self.resort_labels) * self.resort_label_height)
@@ -99,13 +103,94 @@ class ResortsMenuWindow(QMainWindow):
         resort_index = len(self.resort_labels)-1 if resort_index > len(self.resort_labels)-1 else resort_index
 
         return self.resort_labels[resort_index]
+    
+class ResortInfoWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
 
+        font_id = QFontDatabase.addApplicationFont('data/Snowman.ttf')
+        if (font_id < 0): print('ERROR :: Unable to load font')
+        self.snowman_font = QFontDatabase.applicationFontFamilies(font_id)[0]
+
+        self.create_gui()
+    
+    def create_gui(self):
+        if sys.platform == 'win32':
+            # self.resize(SCREEN_SIZE[0], SCREEN_SIZE[1])
+            self.setWindowTitle('Ski Info')
+            self.setFixedSize(SCREEN_SIZE[0], SCREEN_SIZE[1])
+            self.setStyleSheet(QSS_STYLE)
+        elif sys.platform == 'linux':
+            self.showFullScreen()
+
+        with open('data/image.png', 'rb') as f:
+            tmp_img = f.read()
+
+        self.title = QLabel("\uf016histler blackco\uf026")
+        self.title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.title.setObjectName("title")
+        self.title.setFont(QFont(self.snowman_font, 70))
+
+        self.snowfall_48hrs = QLabel(">test")
+        self.snowfall_48hrs.setFont(QFont(self.snowman_font, 40))
+        self.snowfall_season = QLabel(">test")
+        self.snowfall_season.setFont(QFont(self.snowman_font, 40))
+        self.temperature_base_min = QLabel(">test")
+        self.temperature_base_min.setFont(QFont(self.snowman_font, 40))
+        self.temperature_base_max = QLabel(">test")
+        self.temperature_base_max.setFont(QFont(self.snowman_font, 40))
+        self.temperature_peak_min = QLabel(">test")
+        self.temperature_peak_min.setFont(QFont(self.snowman_font, 40))
+        self.temperature_peak_max = QLabel(">test")
+        self.temperature_peak_max.setFont(QFont(self.snowman_font, 40))
+
+        info_panel = QVBoxLayout()
+        info_panel.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        info_panel.addWidget(self.snowfall_48hrs)
+        info_panel.addWidget(self.snowfall_season)
+        info_panel.addWidget(self.temperature_base_min)
+        info_panel.addWidget(self.temperature_base_max)
+        info_panel.addWidget(self.temperature_peak_min)
+        info_panel.addWidget(self.temperature_peak_max)
+
+        self.trails_chart = QLabel("Trails")
+        self.trails_chart.setObjectName("chart")
+        self.trails_chart.setPixmap(QPixmap('data/image.png').scaled(200, 200))
+        self.chairs_chart = QLabel("Lifts")
+        self.chairs_chart.setObjectName("chart")
+        self.chairs_chart.setPixmap(QPixmap('data/image.png').scaled(200, 200))
+        charts_hbox = QHBoxLayout()
+        charts_hbox.addWidget(self.trails_chart)
+        charts_hbox.addWidget(self.chairs_chart)
+
+        self.resort_map = QLabel()
+        self.resort_map.setObjectName("map")
+        self.resort_map.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.resort_map.setPixmap(QPixmap('data/map.png'))
+
+        graphics = QVBoxLayout()
+        graphics.addWidget(self.resort_map)
+        graphics.addLayout(charts_hbox)
+
+        data_panel = QHBoxLayout()
+        data_panel.addLayout(info_panel)
+        data_panel.addLayout(graphics)
+
+        all_layout = QVBoxLayout()
+        all_layout.addWidget(self.title)
+        all_layout.addLayout(data_panel)
+
+        all_widget = QWidget()
+        all_widget.setLayout(all_layout)
+        self.setCentralWidget(all_widget)
+        
 if __name__ == '__main__':
     with open('data/favorite_resorts.json') as f:
         resorts = json.load(f)['data']
     
     app = QApplication(sys.argv)
-    window = ResortsMenuWindow(resorts=resorts)
+    # window = ResortsMenuWindow(resorts=resorts)
+    window = ResortInfoWindow()
     window.show()
 
 

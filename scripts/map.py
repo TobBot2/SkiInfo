@@ -40,14 +40,12 @@ def request_map_image(latitude: int, longitude: int, img_width: int, img_height:
             # if checked last api key
             if (i == len(API_KEYS) - 1):
                 raise RuntimeError('No valid api keys')
-
-    return response.content
         
 if __name__ == '__main__':
     lat = 50.10693
     lon = -122.922073
 
-    map_img = request_map_image(lat, lon, 480, 480)
-    with open('data/image.png', 'wb') as f:
+    map_img = request_map_image(lat, lon, 340, 175)
+    with open('data/map.png', 'wb') as f:
         f.write(map_img)
 

@@ -1,0 +1,38 @@
+* {
+    background-color:#66a1ff;
+    color: #2e2e3b;
+}
+
+QScrollArea {
+    padding-left: 10px;
+    padding-right: 10px;
+
+    border: 1px solid;
+    border-radius: 10px;
+    background-color: #f0eff4;
+
+    border-left: 0;
+    border-right: 0;
+}
+
+QScrollArea QWidget {
+    background-color: #f0eff4;
+}
+
+
+QLabel#title {
+    background-color: #f0eff4;
+    border-radius: 15px;
+}
+
+QLabel#map {
+    padding: 10px;
+    background-color: #f0eff4;
+
+    border-radius: 30px;
+    border: 1px solid;
+}
+
+QLabel#chart {
+    border: 1px solid;
+}
