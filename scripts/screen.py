@@ -1,12 +1,9 @@
-import typing
 from PyQt6.QtWidgets import (QWidget, QLabel, QScrollArea, QApplication,
                              QHBoxLayout, QVBoxLayout, QMainWindow, QStackedWidget)
 from PyQt6.QtGui import QFont, QFontDatabase, QImage, QPixmap
 from PyQt6.QtCore import Qt
 import sys
 import json
-import map
-import ski
 
 SCREEN_SIZE = (800, 480)
 
@@ -35,7 +32,6 @@ class ResortsMenuWindow(QMainWindow):
 
     def create_gui(self, resorts: list[str]) -> None:
         if sys.platform == 'win32':
-            # self.resize(SCREEN_SIZE[0], SCREEN_SIZE[1])
             self.setWindowTitle('Ski Info')
             self.setFixedSize(SCREEN_SIZE[0], SCREEN_SIZE[1])
             self.setStyleSheet(QSS_STYLE)
@@ -122,17 +118,13 @@ class ResortInfoWindow(QMainWindow):
     
     def create_gui(self):
         if sys.platform == 'win32':
-            # self.resize(SCREEN_SIZE[0], SCREEN_SIZE[1])
             self.setWindowTitle('Ski Info')
             self.setFixedSize(SCREEN_SIZE[0], SCREEN_SIZE[1])
             self.setStyleSheet(QSS_STYLE)
         elif sys.platform == 'linux':
             self.showFullScreen()
 
-        with open('data/image.png', 'rb') as f:
-            tmp_img = f.read()
-
-        self.title = QLabel("\uf016histler blackco\uf026")
+        self.title = QLabel("\uf016histler blackco\uf01b")
         self.title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.title.setObjectName("title")
         self.title.setFont(QFont(self.snowman_font, 70))
@@ -159,31 +151,18 @@ class ResortInfoWindow(QMainWindow):
         info_panel.addWidget(self.temperature_peak_min)
         info_panel.addWidget(self.temperature_peak_max)
 
-        self.trails_label = QLabel("% Trails")
-        self.trails_label.setFont(QFont(self.snowman_font, 20))
-        self.trails_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.trails_chart = QLabel()
-        self.trails_chart.setObjectName("chart")
-        self.trails_chart.setPixmap(QPixmap('data/image.png'))
-        self.trails_chart.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        trails = QVBoxLayout()
-        trails.addWidget(self.trails_label)
-        trails.addWidget(self.trails_chart)
+        self.lifts_label = QLabel("% Lifts")
+        self.lifts_label.setFont(QFont(self.snowman_font, 20))
+        self.lifts_label.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight)
 
-        self.chairs_label = QLabel("% Lifts")
-        self.chairs_label.setFont(QFont(self.snowman_font, 20))
-        self.chairs_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.chairs_chart = QLabel()
-        self.chairs_chart.setObjectName("chart")
-        self.chairs_chart.setPixmap(QPixmap('data/image.png'))
-        self.chairs_chart.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        chairs = QVBoxLayout()
-        chairs.addWidget(self.chairs_label)
-        chairs.addWidget(self.chairs_chart)
+        self.lifts_chart = QLabel()
+        self.lifts_chart.setObjectName("chart")
+        self.lifts_chart.setPixmap(QPixmap('data/image.png'))
+        self.lifts_chart.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft)
 
         charts_hbox = QHBoxLayout()
-        charts_hbox.addLayout(trails)
-        charts_hbox.addLayout(chairs)
+        charts_hbox.addWidget(self.lifts_label)
+        charts_hbox.addWidget(self.lifts_chart)
 
         self.resort_map = QLabel()
         self.resort_map.setObjectName("map")
@@ -206,8 +185,14 @@ class ResortInfoWindow(QMainWindow):
         all_widget.setLayout(all_layout)
         self.setCentralWidget(all_widget)
 
-    def update_info(self, resort):
-        pass
+    def update_info(self, data: object):
+        self.snowfall_48hrs.setText(data["snowfall_48hrs"])
+        self.snowfall_season.setText(data["snowfall_season"])
+        self.temperature_base_min.setText(data["temp_base_min"])
+        self.temperature_base_max.setText(data["temp_base_max"])
+        self.temperature_peak_min.setText(data["temp_peak_min"])
+        self.temperature_peak_max.setText(data["temp_peak_max"])
+        self.lifts_label.setText(data["lifts_percent"] * 100)
         
 class Screen(QStackedWidget):
     def __init__(self) -> None:
@@ -229,7 +214,6 @@ class Screen(QStackedWidget):
             self.resort_info.update_info(resort)
         else:
             self.setCurrentWidget(self.resorts_menu)
-
 
 if __name__ == '__main__':
     with open('data/favorite_resorts.json') as f:
